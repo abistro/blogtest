@@ -18,10 +18,18 @@
 					<th>Action</th>
 				</tr>
 			</thead>
+			<tbody class="blogs-list"></tbody>
 		</table>
 
 	</div>
 	
+	<script type="text/template" class="blogs-list-template">
+		<td><span class="author"><%= author %></span></td>
+		<td><span class="author"><%= author %></span></td>
+		<td><span class="author"><%= author %></span></td>
+		<td><button class="btn btn-warning edit-blog">Edit</button></td>
+	</script>
+
 	<script src="bower_components/jquery/dist/jquery.js"></script>
 	<script src="bower_components/underscore/underscore.js"></script>
 	<script src="bower_components/backbone/backbone.js"></script>

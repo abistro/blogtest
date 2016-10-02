@@ -39,6 +39,43 @@ var BlogView = Backbone.View.extend({
 	initialize: function() {
 		this.template = _.template($('.blogs-list-template').html());
 	},
+	events: {
+		'click .edit-blog': 'edit',
+		'click .update-blog': 'update',
+		'click .cancel': 'cancel',
+		'click .delete-blog': 'delete'
+	},
+	edit: function() {
+		$('.edit-blog').hide();
+		$('.delete-blog').hide();
+
+		// to render only the current blog instead of everything
+		this.$('.update-blog').show();
+		this.$('.cancel').show();
+
+		// store current value to var
+		var author = this.$('.author').html();
+		var title = this.$('.title').html();
+		var url = this.$('.url').html();
+
+		// change the html to input boxes type text, then populate
+		// the stored value inside that box
+		this.$('.author').html('<input type="text" class="form-control author-update" value="' + author + '">');
+		this.$('.title').html('<input type="text" class="form-control title-update" value="' + title + '">');
+		this.$('.url').html('<input type="text" class="form-control url-update" value="' + url + '">');
+
+	},
+	update: function() {
+		this.model.set('author',$('.author-update').val());
+		this.model.set('title',$('.title-update').val());
+		this.model.set('url',$('.url-update').val());
+	},
+	cancel: function() {
+		blogsView.render();
+	},
+	delete: function() {
+		this.model.destroy();
+	},
 	render: function() {
 		this.$el.html(this.template(this.model.toJSON()));
 		return this;
@@ -52,7 +89,19 @@ var BlogsView = Backbone.View.extend({
 	model: blogs,
 	el: $('.blogs-list'),
 	initialize: function() {
+		// hack to instantiate self to this.
+		var self = this;
 		this.model.on('add', this.render, this);
+
+		// listen to a change of a data model in a collection
+		this.model.on('change', function() {
+			setTimeout(function() {
+				self.render();
+			}, 30)
+		}, this)
+
+		// listen to the removal of a data model
+		this.model.on('remove', this.render, this);
 	},
 	render: function() {
 		var self = this;
